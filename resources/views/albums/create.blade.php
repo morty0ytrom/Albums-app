@@ -110,21 +110,27 @@
 //         });
 // }
 
-async function fillFromApi() {
+window.loadAlbum = async function () {
     const album = document.querySelector('#album_name').value;
 
-    const res = await fetch(`/albums/fetch?album=${album}`);
-    const data = await res.json();
+    try {
+        const res = await fetch(`/albums/fetch?album=${album}`);
+        const data = await res.json();
 
-    if (data.error) {
-        alert(data.error);
-        return;
+        if (data.error) {
+            alert(data.error);
+            return;
+        }
+
+        document.querySelector('#artist').value = data.artist;
+        document.querySelector('#image').value = data.image;
+
+        const preview = document.querySelector('#preview');
+        if (preview) preview.src = data.image;
+
+    } catch (e) {
+        console.error(e);
+        alert('Ошибка запроса к API');
     }
-
-    document.querySelector('#artist').value = data.artist;
-    document.querySelector('#image').value = data.image;
-
-    // превью
-    document.querySelector('#preview').src = data.image;
 }
 </script>
