@@ -31,7 +31,7 @@
 
                 <div class="form-group">
                     <label>Исполнитель</label>
-                    <input type="text" name="artist" placeholder="Введите исполнителя">
+                    <input type="text" id="artist" name="artist" placeholder="Введите исполнителя">
                 </div>
 
                 <div class="form-group">
@@ -111,7 +111,7 @@
 // }
 
 window.loadAlbum = async function () {
-    const album = document.querySelector('#album_name').value;
+    const album = document.querySelector('#title').value;
 
     try {
         const res = await fetch(`/albums/fetch?album=${album}`);
@@ -123,7 +123,7 @@ window.loadAlbum = async function () {
         }
 
         document.querySelector('#artist').value = data.artist;
-        document.querySelector('#image').value = data.image;
+        document.querySelector('#cover_url').value = data.image;
 
         const preview = document.querySelector('#preview');
         if (preview) preview.src = data.image;
