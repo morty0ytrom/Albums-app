@@ -72,41 +72,59 @@
 </html>
 
 <script>
-function loadAlbum() {
-    let title = document.getElementById('title').value;
+// function loadAlbum() {
+//     let title = document.getElementById('title').value;
 
-    if (!title) {
-        alert('Введи название альбома');
+//     if (!title) {
+//         alert('Введи название альбома');
+//         return;
+//     }
+
+//     fetch('/api/album-info?title=' + encodeURIComponent(title))
+//         .then(res => res.json())
+//         .then(data => {
+//             console.log(data);
+
+//             let album = data.results?.albummatches?.album[0];
+
+//             if (!album) {
+//                 alert('Альбом не найден');
+//                 return;
+//             }
+
+//             // заполняем форму
+//             document.querySelector('[name="artist"]').value = album.artist || '';
+
+//             let image = album.image?.[2]?.['#text'] || '';
+
+//             document.querySelector('[name="cover_url"]').value = image;
+
+//             // обновляем превью
+//             if (image) {
+//                 document.getElementById('preview').src = image;
+//             }
+//         })
+//         .catch(err => {
+//             console.error(err);
+//             alert('Ошибка при загрузке данных');
+//         });
+// }
+
+async function fillFromApi() {
+    const album = document.querySelector('#album_name').value;
+
+    const res = await fetch(`/albums/fetch?album=${album}`);
+    const data = await res.json();
+
+    if (data.error) {
+        alert(data.error);
         return;
     }
 
-    fetch('/api/album-info?title=' + encodeURIComponent(title))
-        .then(res => res.json())
-        .then(data => {
-            console.log(data);
+    document.querySelector('#artist').value = data.artist;
+    document.querySelector('#image').value = data.image;
 
-            let album = data.results?.albummatches?.album[0];
-
-            if (!album) {
-                alert('Альбом не найден');
-                return;
-            }
-
-            // заполняем форму
-            document.querySelector('[name="artist"]').value = album.artist || '';
-
-            let image = album.image?.[2]?.['#text'] || '';
-
-            document.querySelector('[name="cover_url"]').value = image;
-
-            // обновляем превью
-            if (image) {
-                document.getElementById('preview').src = image;
-            }
-        })
-        .catch(err => {
-            console.error(err);
-            alert('Ошибка при загрузке данных');
-        });
+    // превью
+    document.querySelector('#preview').src = data.image;
 }
 </script>

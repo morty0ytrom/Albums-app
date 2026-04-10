@@ -102,17 +102,59 @@ class AlbumController extends Controller
     }
 
     // функция получения информации о альбоме
-    public function getAlbumInfo(Request $request)
-    {
-        $title = $request->title;
+    // public function getAlbumInfo(Request $request)
+    // {
+    //     $title = $request->title;
 
-        $response = Http::get('https://ws.audioscrobbler.com/2.0/', [
+    //     $response = Http::get('https://ws.audioscrobbler.com/2.0/', [
+    //         'method' => 'album.search',
+    //         'album' => $title,
+    //         'api_key' => 'bb7b6c83408f8eb419952616c05daabc',
+    //         'format' => 'json',
+    //     ]);
+
+    //     return response()->json($response->json());
+    // }
+
+    public function fetchFromApi(Request $request)
+    {
+        $album = $request->query('album');
+
+        if (!$album) {
+            return response()->json([
+                'error' => 'Album name is required'
+            ], 400);
+        }
+
+        $apiKey = env('LASTFM_API_KEY');
+
+        $response = Http::get('http://ws.audioscrobbler.com/2.0/', [
             'method' => 'album.search',
-            'album' => $title,
-            'api_key' => 'bb7b6c83408f8eb419952616c05daabc',
-            'format' => 'json',
+            'album' => $album,
+            'api_key' => $apiKey,
+            'format' => 'json'
         ]);
 
-        return response()->json($response->json());
+        if (!$response->successful()) {
+            return response()->json([
+                'error' => 'API request failed'
+            ], 500);
+        }
+
+        $data = $response->json();
+
+        $results = $data['results']['albummatches']['album'][0] ?? null;
+
+        if (!$results) {
+            return response()->json([
+                'error' => 'No album found'
+            ], 404);
+        }
+
+        return response()->json([
+            'artist' => $results['artist'],
+            'image' => $results['image'][2]['#text'] ?? null,
+            'name' => $results['name']
+        ]);
     }
 }

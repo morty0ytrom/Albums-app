@@ -43,26 +43,27 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('/albums/{id}', [AlbumController::class, 'destroy']);
 });
 
-Route::get('/api/album-info', function () {
-    $title = request()->title;
+Route::get('/albums/fetch', [AlbumController::class, 'fetchFromApi']);
+// Route::get('/api/album-info', function () {
+//     $title = request()->title;
 
-    return response()->json([
-        'results' => [
-            'albummatches' => [
-                'album' => [
-                    [
-                        'artist' => $title,
-                        'image' => [
-                            ['#text' => ''],
-                            ['#text' => ''],
-                            ['#text' => 'https://img.freepik.com/premium-photo/album-cover-cd-design_663277-36600.jpg']
-                        ]
-                    ]
-                ]
-            ]
-        ]
-    ]);
-});
+//     return response()->json([
+//         'results' => [
+//             'albummatches' => [
+//                 'album' => [
+//                     [
+//                         'artist' => $title,
+//                         'image' => [
+//                             ['#text' => ''],
+//                             ['#text' => ''],
+//                             ['#text' => 'https://img.freepik.com/premium-photo/album-cover-cd-design_663277-36600.jpg']
+//                         ]
+//                     ]
+//                 ]
+//             ]
+//         ]
+//     ]);
+// });
 
 // auth (breeze)
 require __DIR__.'/auth.php';
