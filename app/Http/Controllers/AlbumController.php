@@ -128,7 +128,7 @@ class AlbumController extends Controller
 
         $apiKey = env('LASTFM_API_KEY');
 
-        $response = Http::get('http://ws.audioscrobbler.com/2.0/', [
+        $response = Http::get('https://ws.audioscrobbler.com/2.0/', [
             'method' => 'album.search',
             'album' => $album,
             'api_key' => $apiKey,
